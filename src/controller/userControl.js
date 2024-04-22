@@ -1,6 +1,8 @@
 
 const knex = require('../database/config')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
 const addUser = async (req, res) => {
     const { name, email, password } = req.body
     try {
@@ -24,10 +26,24 @@ const addUser = async (req, res) => {
 
 }
 
+const loginUser = async (req, res) => {
+    const { email } = req.body
+    try {
+        const user = await knex('usuarios').where({ email }).first()
+        const token = jwt.sign({ id: user.id }, process.env.SENHA, { expiresIn: '8h' })
+        const { password: _, ...userLogged } = user
+
+        return res.status(200).json({ userData: userLogged, token })
+
+    } catch (error) {
+        return res.status(500).json({ msg: error.message })
+    }
+}
+
 
 const listUsers = async (req, res) => {
     try {
-        const users = await knex('usuarios')
+        const users = await knex.select('id', 'name', 'email').from('usuarios')
         if (users.length === 0) {
             return res.status(400).json({ msg: "Não há cliente cadastrado" })
         }
@@ -42,5 +58,6 @@ const listUsers = async (req, res) => {
 
 module.exports = {
     addUser,
-    listUsers
+    listUsers,
+    loginUser
 }
