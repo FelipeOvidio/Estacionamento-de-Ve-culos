@@ -4,6 +4,10 @@ const bcrypt = require('bcrypt')
 const addUser = async (req, res) => {
     const { name, email, password } = req.body
     try {
+        const existEmail = await knex('usuarios').where({ email }).first()
+        if (existEmail) {
+            return res.status(409).json({ msg: 'Email ja cadastrado' })
+        }
         const passwordCript = await bcrypt.hash(password, 10)
         const newUser = {
             name,
@@ -19,6 +23,7 @@ const addUser = async (req, res) => {
     }
 
 }
+
 
 const listUsers = async (req, res) => {
     try {
