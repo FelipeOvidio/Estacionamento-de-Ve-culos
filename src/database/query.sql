@@ -3,8 +3,8 @@ create database estacionamento;
 create table usuarios
 (
   id serial primary key,
-  nome text not null,
+  name text not null,
   email text not null unique,
-  senha text not null
+  password text not null
 );
 
