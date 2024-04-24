@@ -2,6 +2,7 @@
 const knex = require('../database/config')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+
 require('dotenv').config()
 const addUser = async (req, res) => {
     const { name, email, password } = req.body
@@ -56,8 +57,29 @@ const listUsers = async (req, res) => {
     }
 }
 
+const updateUser = async (req, res) => {
+    const { name, email } = req.body
+    const { id } = req.params
+
+    try {
+        const existEmail = await knex('usuarios').where({ email }).first()
+        if (existEmail) {
+            return res.status(409).json({ msg: 'Já existe um usuario com email informado' })
+        }
+        const user = await knex('usuarios').update({ name, email }).where({ id })
+        if (user) {
+            return res.status(200).json({ msg: 'Dados atulizado com sucesso' })
+        }
+        return res.status(409).json({ msg: 'Não existe usuario com o Id informado' })
+    } catch (error) {
+        return res.status(500).json({ msg: error.message })
+    }
+
+}
+
 module.exports = {
     addUser,
     listUsers,
-    loginUser
+    loginUser,
+    updateUser
 }
