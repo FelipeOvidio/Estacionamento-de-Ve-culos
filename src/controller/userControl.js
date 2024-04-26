@@ -44,9 +44,9 @@ const loginUser = async (req, res) => {
 
 const listUsers = async (req, res) => {
     try {
-        const users = await knex.select('id', 'name', 'email').from('usuarios')
+        const users = await knex.select('id', 'name', 'email').from('usuarios').orderBy('id')
         if (users.length === 0) {
-            return res.status(400).json({ msg: "Não há cliente cadastrado" })
+            return res.status(400).json({ msg: "Não há usuario cadastrado" })
         }
         return res.status(200).json(users)
 
