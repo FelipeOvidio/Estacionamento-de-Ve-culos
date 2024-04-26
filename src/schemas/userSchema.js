@@ -16,6 +16,4 @@ const schemaUser = joi.object({
         + 'e uma letra minúscula, e ter no mínimo 8 caracteres.'),
 })
 
-module.exports = {
-    schemaUser
-}
+module.exports = schemaUser
