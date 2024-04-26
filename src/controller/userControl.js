@@ -77,9 +77,24 @@ const updateUser = async (req, res) => {
 
 }
 
+const deleteuser = async (req, res) => {
+    const { id } = req.params
+    try {
+        const existUser = await knex('usuarios').where({ id }).first()
+        if (existUser) {
+            await knex('usuarios').del().where({ id })
+            return res.status(200).json({ msg: 'Usuario exlcuido com sucesso' })
+        }
+        return res.status(404).json({ msg: 'Não existe usuario com o Id informado' })
+    } catch (error) {
+        return res.status(500).json({ msg: error.message })
+    }
+}
+
 module.exports = {
     addUser,
     listUsers,
     loginUser,
-    updateUser
+    updateUser,
+    deleteuser
 }
