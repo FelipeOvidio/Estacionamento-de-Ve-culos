@@ -3,10 +3,12 @@ const { addUser, listUsers, loginUser, updateUser, deleteuser } = require('../co
 const valdationRequest = require('../middleware/valdationRequest');
 const schemaUser = require('../schemas/userSchema');
 const validationLogin = require('../middleware/validationLogin');
+const validationToken = require('../middleware/validationToken');
 const userRouter = express();
 
 userRouter.post('/addUser', valdationRequest(schemaUser), addUser)
 userRouter.post('/login', validationLogin, loginUser)
+userRouter.use(validationToken)
 userRouter.get('/listUsers', listUsers)
 userRouter.put('/updateUser/:id', updateUser)
 userRouter.delete('/deleteUser/:id', deleteuser)
