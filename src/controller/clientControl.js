@@ -1,3 +1,4 @@
+const { json } = require('express')
 const knex = require('../database/config')
 
 const customers = async (req, res) => {
@@ -56,9 +57,25 @@ const updateClient = async (req, res) => {
     }
 }
 
+const deleteClient = async (req, res) => {
+    const { id } = req.params
+    try {
+        const existClient = await knex('clientes').where({ id }).first()
+        if (existClient) {
+            await knex('clientes').del().where({ id })
+            return res.status(200).json({ msg: 'Cliente excluido com sucesso' })
+        }
+        return res.status(404).json({ msg: 'Não há cliente com o ID informado' })
+
+    } catch (error) {
+        return res.status(500).json({ msg: error.message })
+    }
+}
+
 
 module.exports = {
     customers,
     addClient,
-    updateClient
+    updateClient,
+    deleteClient
 }
