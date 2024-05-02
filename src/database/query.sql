@@ -18,11 +18,11 @@ create table clientes
 
 create table veiculos
 (
-  id serial primary key,
-  clientes_id integer references clientes(id),
+  id serial primary key, 
   brand text not null,
   model text not null,
   plate text not null unique,
-  prohibited timestamp default now(),
-  exit timestamp
+  prohibited timestamptz default now(),
+  clientes_id integer references clientes(id)
+  
 );
