@@ -21,6 +21,7 @@ create table veiculos
   id serial primary key, 
   brand text not null,
   model text not null,
+  year int not null,
   plate text not null unique,
   prohibited timestamptz default now(),
   clientes_id integer references clientes(id)
