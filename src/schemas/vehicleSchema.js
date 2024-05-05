@@ -19,4 +19,14 @@ const vehicleSchema = joi.object({
     })
 })
 
+const registerExit = joi.object({
+    vehicle_id: joi.number().required().messages({
+        'any.required': 'Informe o ID do veiculo'
+    }),
+    client_id: joi.number().required().messages({
+        'any.required': 'Informe o ID do proprietário do veiculo'
+    })
+})
+
 module.exports = vehicleSchema
+module.exports = registerExit
