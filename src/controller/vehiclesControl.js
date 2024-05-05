@@ -34,9 +34,44 @@ const addCar = async (req, res) => {
     }
 }
 
+const exitVehicle = async (req, res) => {
+    const { vehicle_id, client_id } = req.body
+    const { id } = req.params
+    try {
+        const existVehicle = await knex('veiculos').where({ id }).first()
+        if (existVehicle) {
+            const prohibitedVehicle = await knex.select('prohibited').from('veiculos').where({ id })
+
+            const register = {
+                vehicle_id,
+                client_id,
+                prohibited: prohibitedVehicle
+            }
+            await knex('registro_saida').insert(register)
+            return res.status(200).json({ msg: 'Registro realizado com sucesso' })
+        }
+        return res.status(404).json({ msg: 'Não há veiculo com o ID informado' })
+    } catch (error) {
+        return res.status(500).json({ msg: error.message })
+    }
+}
+
+const registerVehicles = async (req, res) => {
+    try {
+        const vehicles = await knex.select('*').from('registro_saida')
+        if (vehicles.length == 0) {
+            return res.status(404).json({ msg: 'Não há veículos cadastrado' })
+        }
+        return res.status(200).json(vehicles)
+    } catch (error) {
+        return res.status(500).json({ msg: error.message })
+    }
+}
 
 
 module.exports = {
     listCars,
-    addCar
+    addCar,
+    exitVehicle,
+    registerVehicles
 }
