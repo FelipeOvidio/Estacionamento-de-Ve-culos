@@ -27,3 +27,12 @@ create table veiculos
   clientes_id integer references clientes(id)
   
 );
+
+create table registro_saida
+(
+  id serial primary key,
+  vehicle_id integer references veiculos(id),
+  client_id integer references clientes(id),
+  prohibited timestamptz,
+  exit timestamptz default now()
+);
